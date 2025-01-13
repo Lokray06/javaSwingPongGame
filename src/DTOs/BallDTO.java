@@ -27,40 +27,49 @@ public class BallDTO {
 
         // Loop through each palette and check for collision
         for (PaletteDTO palette : palettes) {
-            // Check if the ball is within the horizontal and vertical bounds of the palette
-            if (this.posX + this.radius > palette.posX && this.posX - this.radius < palette.posX + palette.width &&
-                    this.posY + this.radius > palette.posY && this.posY - this.radius < palette.posY + palette.height) {
+            // Calculate bounds of the ball
+            float ballLeft = this.posX - this.radius;
+            float ballRight = this.posX + this.radius;
+            float ballTop = this.posY - this.radius;
+            float ballBottom = this.posY + this.radius;
 
-                // Horizontal collision detection (left or right)
-                if (this.posX < palette.posX) {
-                    // Ball is on the left of the palette
-                    collisionResult[0] = true;  // Left collision
-                } else if (this.posX > palette.posX + palette.width) {
-                    // Ball is on the right of the palette
-                    collisionResult[0] = true;  // Right collision
+            // Calculate bounds of the palette
+            float paletteLeft = palette.posX;
+            float paletteRight = palette.posX + palette.width;
+            float paletteTop = palette.posY;
+            float paletteBottom = palette.posY + 10;
+
+            // Check if ball intersects the palette
+            if (ballRight > paletteLeft && ballLeft < paletteRight &&
+                    ballBottom > paletteTop && ballTop < paletteBottom) {
+
+                // Determine the collision side
+                float overlapLeft = ballRight - paletteLeft;
+                float overlapRight = paletteRight - ballLeft;
+                float overlapTop = ballBottom - paletteTop;
+                float overlapBottom = paletteBottom - ballTop;
+
+                // Find the smallest overlap to determine collision side
+                float minOverlap = Math.min(Math.min(overlapLeft, overlapRight), Math.min(overlapTop, overlapBottom));
+
+                if (minOverlap == overlapLeft) {
+                    collisionResult[0] = true; // Left collision
+                } else if (minOverlap == overlapRight) {
+                    collisionResult[0] = true; // Right collision
+                } else if (minOverlap == overlapTop) {
+                    collisionResult[1] = true; // Top collision
+                } else if (minOverlap == overlapBottom) {
+                    collisionResult[1] = true; // Bottom collision
                 }
 
-                // Vertical collision detection (top or bottom)
-                if (this.posY < palette.posY) {
-                    // Ball is above the palette
-                    collisionResult[1] = true;  // Top collision
-                } else if (this.posY > palette.posY + palette.height) {
-                    // Ball is below the palette
-                    collisionResult[1] = true;  // Bottom collision
-                }
-
-                // Only flip one velocity based on which side of the palette the ball collided with
-                if (collisionResult[0] && collisionResult[1]) {
-                    // If both horizontal and vertical collisions are true, prioritize vertical collision (for bounce).
-                    collisionResult[0] = false;
-                }
-
-                return collisionResult; // Return once a collision is found
+                // Return immediately after detecting a collision
+                return collisionResult;
             }
         }
 
         return collisionResult; // No collision detected
     }
+
 
     @Override
     public String toString() {
