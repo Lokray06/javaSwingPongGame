@@ -18,25 +18,32 @@ public class BrickSpawner {
         this.verticalSpacing = verticalSpacing;
     }
 
-    // Method to spawn (n) bricks in a grid-like shape
-    public List<BrickDTO> spawnBricks(int rows, int columns) {
+    // Method to spawn bricks in a grid-like shape
+    public List<BrickDTO> init(int rows, int columns) {
         List<BrickDTO> bricks = new ArrayList<>();
 
-        // Calculate the starting position for the first brick (top-left corner of the grid)
-        int startX = 50; // Arbitrary starting X position
-        int startY = 50; // Arbitrary starting Y position
+        int screenWidth = GameWindow.screenX;
+        int screenHeight = GameWindow.screenY;
+        int marginX = GameWindow.marginX;
+        int marginY = GameWindow.marginY;
+
+        // Calculate dimensions and spacing automatically
+        brickWidth = (screenWidth - 2 * marginX) / columns - 5;
+        brickHeight = (screenHeight / 3 - marginY) / rows - 5;
+        horizontalSpacing = 5; // Fixed horizontal spacing
+        verticalSpacing = 5;   // Fixed vertical spacing
 
         // Create bricks in a grid-like pattern
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                int posX = startX + (brickWidth + horizontalSpacing) * col;
-                int posY = startY + (brickHeight + verticalSpacing) * row;
+                int posX = marginX + (brickWidth + horizontalSpacing) * col;
+                int posY = marginY + (brickHeight + verticalSpacing) * row;
 
                 // Random color for each brick (can be customized)
-                int color = (int) (Math.random() * 0xFFFFFF);  // Random RGB color
+                int color = (int) (0x000000);
 
                 // Create the brick and add to the list
-                BrickDTO brick = new BrickDTO(color, posX, posY, brickWidth, brickHeight);
+                BrickDTO brick = new BrickDTO(color, posX, posY, brickWidth, brickHeight, 10, 10);
                 bricks.add(brick);
             }
         }

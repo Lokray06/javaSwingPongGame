@@ -1,24 +1,53 @@
 package DTOs;
 
 public class BrickDTO {
-    public int color;      // Brick color (could be an RGB int)
-    public int posX, posY; // Position of the brick (top-left corner)
-    public int width, height; // Width and height of the brick
-    public boolean destroyed; // Whether the brick is destroyed
+    public int color;
+    private int posX, posY;
+    private int width, height;
+    private int health;
+    private int score;
 
-    // Constructor to initialize the brick
-    public BrickDTO(int color, int posX, int posY, int width, int height) {
+
+    // Constructor
+    public BrickDTO(int color, int posX, int posY, int width, int height, int health, int score) {
         this.color = color;
         this.posX = posX;
         this.posY = posY;
         this.width = width;
         this.height = height;
-        this.destroyed = false; // Initially, the brick is not destroyed
+        this.health = health;
+        this.score = score;
     }
 
-    // Override toString for debugging and easier visualization
-    @Override
-    public String toString() {
-        return "BrickDTO [color=" + color + ", posX=" + posX + ", posY=" + posY + ", width=" + width + ", height=" + height + ", destroyed=" + destroyed + "]";
+    // Getters for brick properties
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

@@ -1,5 +1,11 @@
 package DTOs;
 
+import utils.Controller;
+import utils.GameWindow;
+import utils.Random;
+import utils.ScreenHandler;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BallDTO {
@@ -19,6 +25,59 @@ public class BallDTO {
         this.moveSpeed = moveSpeed;
         this.velX = moveSpeed;
         this.velY = moveSpeed;
+    }
+
+    public boolean checkBrickCollision(List<BrickDTO> bricks) {
+        List<BrickDTO> bricksToRemove = new ArrayList<>();
+
+        for (BrickDTO brick : bricks) {
+            // Calculate bounds of the ball
+            float ballLeft = this.posX;
+            float ballRight = this.posX + this.radius;
+            float ballTop = this.posY;
+            float ballBottom = this.posY + this.radius;
+
+            // Calculate bounds of the brick
+            float brickLeft = brick.getPosX();
+            float brickRight = brick.getPosX() + brick.getWidth();
+            float brickTop = brick.getPosY();
+            float brickBottom = brick.getPosY() + brick.getHeight();
+
+            // Check if ball intersects the brick
+            if (ballRight > brickLeft && ballLeft < brickRight &&
+                    ballBottom > brickTop && ballTop < brickBottom) {
+
+                // Calculate the overlap on each side
+                float overlapLeft = ballRight - brickLeft;
+                float overlapRight = brickRight - ballLeft;
+                float overlapTop = ballBottom - brickTop;
+                float overlapBottom = brickBottom - ballTop;
+
+                // Find the smallest overlap to determine collision side
+                float minOverlap = Math.min(Math.min(overlapLeft, overlapRight), Math.min(overlapTop, overlapBottom));
+
+                // Determine which side of the brick was hit
+                if (minOverlap == overlapLeft || minOverlap == overlapRight) {
+                    velX *= -1; // Reverse horizontal velocity (left or right collision)
+                } else if (minOverlap == overlapTop || minOverlap == overlapBottom) {
+                    velY *= -1; // Reverse vertical velocity (top or bottom collision)
+                }
+
+                // Add the brick to the removal list
+                bricksToRemove.add(brick);
+            }
+        }
+
+        // Remove the bricks outside the loop
+        bricks.removeAll(bricksToRemove);
+
+        // If bricks were removed, update the score
+        if (!bricksToRemove.isEmpty()) {
+            Controller.score += 10 * bricksToRemove.size(); // Add points for each broken brick
+            return true; // Collision has occurred
+        }
+
+        return false; // No collision
     }
 
     // Method to check for collisions with the list of palettes

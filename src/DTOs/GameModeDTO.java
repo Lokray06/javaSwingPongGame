@@ -2,7 +2,6 @@ package DTOs;
 
 public class GameModeDTO
 {
-
     String gameModeName = "aaaaa";
     int bricks = 0;
     int startingBricks = 0;

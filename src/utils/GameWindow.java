@@ -16,6 +16,8 @@ public class GameWindow {
 
     public static int screenX = 800;
     public static int screenY = 600;
+    public static int marginX = 60;
+    public static int marginY = 60;
 
     public GameWindow(List<PaletteDTO> palettes, List<BallDTO> balls) {
 
@@ -55,7 +57,7 @@ public class GameWindow {
 
         // Timer to update the screen at regular intervals (60 FPS)
         Timer timer = new Timer(1000 / 60, e -> {
-            ScreenHandler.updatePositions(); // Update the positions through Controller
+            ScreenHandler.tick();
             screenHandler.repaint(); // Repaint the screen
         });
         timer.start();

@@ -14,6 +14,7 @@ public class GameModeSelectionWindow {
     private JFrame frame;
     private JComboBox<String> gameModeDropdown;
     private JButton startButton;
+    public static GameModeDTO selectedGameMode = null;
 
     public GameModeSelectionWindow() {
         frame = new JFrame("Select Game Mode");
@@ -21,7 +22,7 @@ public class GameModeSelectionWindow {
         frame.setLayout(new FlowLayout());
 
         // Create a dropdown for selecting game mode
-        String[] gameModes = {"Easy", "Medium"};
+        String[] gameModes = {"Easy", "Medium", "Custom"};
         gameModeDropdown = new JComboBox<>(gameModes);
         frame.add(gameModeDropdown);
 
@@ -32,7 +33,7 @@ public class GameModeSelectionWindow {
         startButton.addActionListener(e -> {
             // Get the selected game mode
             String selectedMode = (String) gameModeDropdown.getSelectedItem();
-            GameModeDTO selectedGameMode = Levels.levels.get(selectedMode);
+            selectedGameMode = Levels.levels.get(selectedMode);
 
             // Initialize the palettes based on the selected game mode
             List<PaletteDTO> palettes = new ArrayList<>();
@@ -53,7 +54,7 @@ public class GameModeSelectionWindow {
             List<BallDTO> balls = new ArrayList<>();
             for(int i = 0; i < selectedGameMode.getNumberOfBalls(); i++)
             {
-                balls.add(new BallDTO(Color.BLACK.getRGB(), 30, GameWindow.screenX / 2, GameWindow.screenY / 2, selectedGameMode.getBallSpeed(), 0, 0));
+                balls.add(new BallDTO(Color.BLACK.getRGB(), 30, 600, 10, selectedGameMode.getBallSpeed(), 0, 0));
             }
 
             // Close the game mode selection window
