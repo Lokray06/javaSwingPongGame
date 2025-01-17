@@ -12,8 +12,35 @@ public class GameModeDTO
     int spawnBrickCooldownSecs = 0;
     int numberOfBricksEachSpawning;
     int numberOfBalls = 0;
+    int lives = 0;
+    int paletteSpeed = 0;
+    int ballSize;
 
-    public GameModeDTO(int bricks, int startingBricks, int maxGameTimeSecs, boolean[] sidesAllowed, int ballSpeed, int palettes, int spawnBrickCooldown, int numberOfBricksEachSpawning, int numberOfballs) {
+    public int getPaletteSpeed() {
+        return paletteSpeed;
+    }
+
+    public void setPaletteSpeed(int paletteSpeed) {
+        this.paletteSpeed = paletteSpeed;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public int getBallSize() {
+        return ballSize;
+    }
+
+    public void setBallSize(int ballSize) {
+        this.ballSize = ballSize;
+    }
+
+    public GameModeDTO(int bricks, int startingBricks, int maxGameTimeSecs, boolean[] sidesAllowed, int ballSpeed, int palettes, int spawnBrickCooldown, int numberOfBricksEachSpawning, int numberOfballs, int lives, int paletteSpeed, int ballSize) {
         this.bricks = bricks;
         this.startingBricks = startingBricks;
         this.maxGameTimeSecs = maxGameTimeSecs;
@@ -23,6 +50,9 @@ public class GameModeDTO
         this.spawnBrickCooldownSecs = spawnBrickCooldown;
         this.numberOfBricksEachSpawning = numberOfBricksEachSpawning;
         this.numberOfBalls = numberOfballs;
+        this.lives = lives;
+        this.paletteSpeed = paletteSpeed;
+        this.ballSize = ballSize;
     }
 
     public int getNumberOfBalls() {

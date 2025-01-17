@@ -1,5 +1,7 @@
 package DTOs;
 
+import utils.BrickSpawner;
+
 public class BrickDTO {
     public int color;
     private int posX, posY;
@@ -17,6 +19,7 @@ public class BrickDTO {
         this.height = height;
         this.health = health;
         this.score = score;
+        BrickSpawner.totalNumberOfBricksSpawned++;
     }
 
     // Getters for brick properties

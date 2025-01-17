@@ -1,9 +1,6 @@
 package DTOs;
 
-import utils.Controller;
-import utils.GameWindow;
 import utils.Random;
-import utils.ScreenHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +20,14 @@ public class BallDTO {
         this.posX = posX;
         this.posY = posY;
         this.moveSpeed = moveSpeed;
-        this.velX = moveSpeed;
-        this.velY = moveSpeed;
+        this.velX = moveSpeed * Random.direction();
+        this.velY = moveSpeed * Random.direction();
     }
 
-    public boolean checkBrickCollision(List<BrickDTO> bricks) {
+    public List<BrickDTO> checkBrickCollision(List<BrickDTO> bricks) {
         List<BrickDTO> bricksToRemove = new ArrayList<>();
+        boolean reverseX = false;
+        boolean reverseY = false;
 
         for (BrickDTO brick : bricks) {
             // Calculate bounds of the ball
@@ -58,9 +57,10 @@ public class BallDTO {
 
                 // Determine which side of the brick was hit
                 if (minOverlap == overlapLeft || minOverlap == overlapRight) {
-                    velX *= -1; // Reverse horizontal velocity (left or right collision)
-                } else if (minOverlap == overlapTop || minOverlap == overlapBottom) {
-                    velY *= -1; // Reverse vertical velocity (top or bottom collision)
+                    reverseX = true; // Mark for horizontal velocity reversal
+                }
+                if (minOverlap == overlapTop || minOverlap == overlapBottom) {
+                    reverseY = true; // Mark for vertical velocity reversal
                 }
 
                 // Add the brick to the removal list
@@ -68,67 +68,51 @@ public class BallDTO {
             }
         }
 
-        // Remove the bricks outside the loop
-        bricks.removeAll(bricksToRemove);
+        // Reverse velocities if collisions occurred
+        if (reverseX) velX *= -1;
+        if (reverseY) velY *= -1;
 
-        // If bricks were removed, update the score
-        if (!bricksToRemove.isEmpty()) {
-            Controller.score += 10 * bricksToRemove.size(); // Add points for each broken brick
-            return true; // Collision has occurred
-        }
-
-        return false; // No collision
+        // Return the list of bricks to be removed
+        return bricksToRemove;
     }
 
-    // Method to check for collisions with the list of palettes
     public boolean[] checkCollision(List<PaletteDTO> palettes) {
         boolean[] collisionResult = new boolean[2]; // [0] = left/right collision, [1] = top/bottom collision
 
-        // Loop through each palette and check for collision
         for (PaletteDTO palette : palettes) {
-            // Calculate bounds of the ball
-            float ballLeft = this.posX - this.radius;
+            float ballLeft = this.posX;
             float ballRight = this.posX + this.radius;
-            float ballTop = this.posY - this.radius;
-            float ballBottom = this.posY + this.radius;
+            float ballTop = this.posY - (this.radius / 2);
+            float ballBottom = this.posY + this.radius + 3;
 
-            // Calculate bounds of the palette
             float paletteLeft = palette.posX;
             float paletteRight = palette.posX + palette.width;
             float paletteTop = palette.posY;
             float paletteBottom = palette.posY + 10;
 
-            // Check if ball intersects the palette
             if (ballRight > paletteLeft && ballLeft < paletteRight &&
                     ballBottom > paletteTop && ballTop < paletteBottom) {
 
-                // Determine the collision side
                 float overlapLeft = ballRight - paletteLeft;
                 float overlapRight = paletteRight - ballLeft;
                 float overlapTop = ballBottom - paletteTop;
                 float overlapBottom = paletteBottom - ballTop;
 
-                // Find the smallest overlap to determine collision side
                 float minOverlap = Math.min(Math.min(overlapLeft, overlapRight), Math.min(overlapTop, overlapBottom));
 
-                if (minOverlap == overlapLeft) {
-                    collisionResult[0] = true; // Left collision
-                } else if (minOverlap == overlapRight) {
-                    collisionResult[0] = true; // Right collision
-                } else if (minOverlap == overlapTop) {
-                    collisionResult[1] = true; // Top collision
-                } else if (minOverlap == overlapBottom) {
-                    collisionResult[1] = true; // Bottom collision
+                if (minOverlap == overlapLeft || minOverlap == overlapRight) {
+                    collisionResult[0] = true; // Left/Right collision
+                }
+                if (minOverlap == overlapTop || minOverlap == overlapBottom) {
+                    collisionResult[1] = true; // Top/Bottom collision
                 }
 
-                // Return immediately after detecting a collision
                 return collisionResult;
             }
         }
 
-        return collisionResult; // No collision detected
+        return collisionResult;
     }
-
 
     @Override
     public String toString() {
