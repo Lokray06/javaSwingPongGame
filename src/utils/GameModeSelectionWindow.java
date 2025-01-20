@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModeSelectionWindow {
+    public static boolean gameRunning = false;
 
     private JFrame frame;
     private JComboBox<String> gameModeDropdown;
@@ -18,7 +19,7 @@ public class GameModeSelectionWindow {
 
     public GameModeSelectionWindow() {
         frame = new JFrame("Select Game Mode");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setLayout(new FlowLayout());
 
         // Create a dropdown for selecting game mode
@@ -30,38 +31,48 @@ public class GameModeSelectionWindow {
         startButton = new JButton("Start Game");
         frame.add(startButton);
 
-        startButton.addActionListener(e -> {
-            // Get the selected game mode
-            String selectedMode = (String) gameModeDropdown.getSelectedItem();
-            selectedGameMode = Levels.levels.get(selectedMode);
+        JButton exitButton = new JButton("Exit");
+        frame.add(exitButton);
 
-            // Initialize the palettes based on the selected game mode
-            List<PaletteDTO> palettes = new ArrayList<>();
-
-            int paletteWidth = 110;  // Define the width of the palette
-            int paletteHeight = 20; // Define the height of the palette
-
-            // Create palettes based on the number specified in the selected game mode
-            if (selectedGameMode.getPalettes() == 1) {
-                // One palette at y = 500 (bottom-left corner placement)
-                palettes.add(new PaletteDTO(Color.BLACK.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight, selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
-            } else if (selectedGameMode.getPalettes() == 2) {
-                // Two palettes, one at y = 500 and the other at y = 50 (bottom-left corner placement)
-                palettes.add(new PaletteDTO(Color.BLACK.getRGB(), GameWindow.screenX/2, 20,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
-                palettes.add(new PaletteDTO(Color.BLACK.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
-            }
-
-            List<BallDTO> balls = new ArrayList<>();
-            for(int i = 0; i < selectedGameMode.getNumberOfBalls(); i++)
-            {
-                balls.add(new BallDTO(Color.BLACK.getRGB(), selectedGameMode.getBallSize(), GameWindow.screenX/2, GameWindow.screenY/2, selectedGameMode.getBallSpeed(), 0, 0));
-            }
-
-            // Close the game mode selection window
+        exitButton.addActionListener(e -> {
             frame.dispose();
+            System.exit(0);
+        });
 
-            // Start the game with the selected game mode and palettes
-            SwingUtilities.invokeLater(() -> new GameWindow(palettes, balls));
+        startButton.addActionListener(e -> {
+            if(!gameRunning)
+            {
+                // Get the selected game mode
+                String selectedMode = (String) gameModeDropdown.getSelectedItem();
+                selectedGameMode = Levels.levels.get(selectedMode);
+
+                // Initialize the palettes based on the selected game mode
+                List<PaletteDTO> palettes = new ArrayList<>();
+
+                int paletteWidth = 110;  // Define the width of the palette
+                int paletteHeight = 20; // Define the height of the palette
+
+                // Create palettes based on the number specified in the selected game mode
+                if (selectedGameMode.getPalettes() == 1) {
+                    // One palette at y = 500 (bottom-left corner placement)
+                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight, selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                } else if (selectedGameMode.getPalettes() == 2) {
+                    // Two palettes, one at y = 500 and the other at y = 50 (bottom-left corner placement)
+                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, 20,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                }
+
+                List<BallDTO> balls = new ArrayList<>();
+                for(int i = 0; i < selectedGameMode.getNumberOfBalls(); i++)
+                {
+                    balls.add(new BallDTO(ScreenHandler.colorBall.getRGB(), selectedGameMode.getBallSize(), GameWindow.screenX/2, GameWindow.screenY/2, selectedGameMode.getBallSpeed(), 0, 0));
+                }
+
+                gameRunning = true;
+
+                // Start the game with the selected game mode and palettes
+                SwingUtilities.invokeLater(() -> new GameWindow(palettes, balls));
+            }
         });
 
         frame.pack();

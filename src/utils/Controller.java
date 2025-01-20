@@ -21,13 +21,19 @@ public class Controller {
     public static int hInput = 0;
     public static int score = 0;
     private boolean requestSpawn = true;
-    public int elapsedTimeSeconds = 0;
+    public static int secondsLeft = 0;
+    public static int elapsedTimeSeconds = 0;
     public static Time gameTime;
     public static boolean gameOver = false;
+    public static boolean gameWon = false;
 
     // Static variables
     public static boolean[] passedSides = new boolean[]{false, false, false, false}; // Left, Top, Right, Bottom
     public static int lives = 3; // Starting lives
+
+    // Timer references
+    private Timer spawnTimer;
+    private Timer countdownTimer;
 
     public Controller(List<PaletteDTO> palettes, List<BallDTO> balls) {
         this.palettes = palettes;
@@ -43,12 +49,15 @@ public class Controller {
         ScreenHandler.isFirstFrame = false;
 
         // Set the starting time to the max game time in seconds
-        elapsedTimeSeconds = selectedGameMode.getMaxGameTimeSecs();
-        gameTime.setTime(elapsedTimeSeconds * 1000L); // Set the game time in milliseconds
+        secondsLeft = selectedGameMode.getMaxGameTimeSecs();
+        gameTime.setTime(secondsLeft * 1000L); // Set the game time in milliseconds
         countElapsedTimeSeconds(); // Start the countdown
+
+        // Start the spawn delay timer
+        requestSpawn = false;
+        startAsynchronousTimer(selectedGameMode.getSpawnBrickCooldownSecs()); // Start cooldown immediately
     }
 
-    // Update method for game logic
     public void update() {
         // Reset passedSides for each update cycle
         for (int i = 0; i < passedSides.length; i++) {
@@ -56,7 +65,7 @@ public class Controller {
         }
 
         // Update game time
-        gameTime.setTime(elapsedTimeSeconds * 1000L); // Convert seconds to milliseconds
+        gameTime.setTime(secondsLeft * 1000L); // Convert seconds to milliseconds
         gameTime.setHours(0);
 
         // Move palettes
@@ -117,6 +126,7 @@ public class Controller {
         // Decrease lives if the ball has passed through any side that is not allowed
         if (anySidePassed()) {
             lives--; // Decrease lives
+            score -= 5;
             resetBallPositions(); // Optionally reset ball positions
         }
 
@@ -125,26 +135,28 @@ public class Controller {
             endGame();
         }
 
-        if (BrickSpawner.totalNumberOfBricksSpawned < selectedGameMode.getBricks()) {
-            if (requestSpawn) {
-                int bricksToSpawn = 0;
-                if(BrickSpawner.totalNumberOfBricksSpawned + selectedGameMode.getNumberOfBricksEachSpawning() <= selectedGameMode.getBricks())
-                {
-                    bricksToSpawn = selectedGameMode.getNumberOfBricksEachSpawning();
-                }
-                else
-                {
-                    bricksToSpawn = selectedGameMode.getNumberOfBricksEachSpawning() - (selectedGameMode.getBricks() - BrickSpawner.totalNumberOfBricksSpawned);
-                }
-                brickSpawner.spawnNextToExistingBricks(bricksToSpawn, bricks);
-                System.out.println("Total bricks spawned: " + BrickSpawner.totalNumberOfBricksSpawned);
-                System.out.println("Spawned " + bricksToSpawn + " new bricks.");
-                requestSpawn = false;
-                startAsynchronousTimer(selectedGameMode.getSpawnBrickCooldownSecs());
-            }
+        if (BrickSpawner.totalNumberOfBricksSpawned >= selectedGameMode.getBricks() && bricks.isEmpty())
+        {
+            gameWon = true;
         }
-    }
 
+        // Spawn bricks only if the cooldown has passed
+        if (requestSpawn && BrickSpawner.totalNumberOfBricksSpawned < selectedGameMode.getBricks()) {
+            int bricksToSpawn = 0;
+            if(BrickSpawner.totalNumberOfBricksSpawned + selectedGameMode.getNumberOfBricksEachSpawning() <= selectedGameMode.getBricks()) {
+                bricksToSpawn = selectedGameMode.getNumberOfBricksEachSpawning();
+            } else {
+                bricksToSpawn = selectedGameMode.getNumberOfBricksEachSpawning() - (selectedGameMode.getBricks() - BrickSpawner.totalNumberOfBricksSpawned);
+            }
+            brickSpawner.spawnNextToExistingBricks(bricksToSpawn, bricks);
+            System.out.println("Total bricks spawned: " + BrickSpawner.totalNumberOfBricksSpawned);
+            System.out.println("Spawned " + bricksToSpawn + " new bricks.");
+            requestSpawn = false;
+            startAsynchronousTimer(selectedGameMode.getSpawnBrickCooldownSecs()); // Reset cooldown
+        }
+
+        elapsedTimeSeconds = selectedGameMode.getMaxGameTimeSecs() - secondsLeft;
+    }
 
     // Check if any side has been passed by the ball that is not allowed
     private boolean anySidePassed() {
@@ -155,7 +167,6 @@ public class Controller {
         }
         return false; // No sides passed that are not allowed
     }
-
 
     private void resetBallPositions() {
         // Temporarily stop the ball's movement by setting velocities to 0
@@ -170,43 +181,51 @@ public class Controller {
                 @Override
                 public void run() {
                     // After the pause, set the ball's speed
-                    ball.velX = selectedGameMode.getBallSpeed() *  Random.direction();
+                    ball.velX = selectedGameMode.getBallSpeed() * Random.direction();
                     ball.velY = selectedGameMode.getBallSpeed() * Random.direction();
                 }
             }, 2000); // Wait for 2 seconds before continuing ball movement
         }
     }
 
-
     // End the game when lives reach 0
     private void endGame() {
         // You can add logic here for ending the game, such as displaying a game over screen
         gameOver = true;
+        if (spawnTimer != null) {
+            spawnTimer.cancel(); // Stop the brick spawn timer
+        }
+        if (countdownTimer != null) {
+            countdownTimer.cancel(); // Stop the countdown timer
+        }
     }
 
     // Starts an asynchronous timer for spawning bricks
     private void startAsynchronousTimer(int delayInSeconds) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        spawnTimer = new Timer();
+        spawnTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                requestSpawn = true;
-                timer.cancel();
+                if (!gameWon && !gameOver) {
+                    requestSpawn = true;
+                }
             }
         }, delayInSeconds * 1000L);
     }
 
     private void countElapsedTimeSeconds() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        countdownTimer = new Timer();
+        countdownTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (elapsedTimeSeconds > 0) {
-                    elapsedTimeSeconds--; // Decrease the time
-                    gameTime.setTime(elapsedTimeSeconds * 1000L); // Update the game time
-                } else {
-                    endGame(); // Time is up, end the game
-                    timer.cancel(); // Stop the timer
+                if (!gameWon && !gameOver) {
+                    if (secondsLeft > 0) {
+                        secondsLeft--; // Decrease the time
+                        gameTime.setTime(secondsLeft * 1000L); // Update the game time
+                    } else {
+                        endGame(); // Time is up, end the game
+                        countdownTimer.cancel(); // Stop the countdown timer
+                    }
                 }
             }
         }, 0, 1000); // Schedule to run every second

@@ -26,7 +26,7 @@ public class GameWindow {
         screenHandler = new ScreenHandler(palettes, balls);
         controller = new Controller(palettes, balls);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(screenHandler);
         frame.pack();
         frame.setResizable(false);

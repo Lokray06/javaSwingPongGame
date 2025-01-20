@@ -20,24 +20,8 @@ public class GameModeDTO
         return paletteSpeed;
     }
 
-    public void setPaletteSpeed(int paletteSpeed) {
-        this.paletteSpeed = paletteSpeed;
-    }
-
-    public int getLives() {
-        return lives;
-    }
-
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
     public int getBallSize() {
         return ballSize;
-    }
-
-    public void setBallSize(int ballSize) {
-        this.ballSize = ballSize;
     }
 
     public GameModeDTO(int bricks, int startingBricks, int maxGameTimeSecs, boolean[] sidesAllowed, int ballSpeed, int palettes, int spawnBrickCooldown, int numberOfBricksEachSpawning, int numberOfballs, int lives, int paletteSpeed, int ballSize) {
@@ -59,79 +43,35 @@ public class GameModeDTO
         return numberOfBalls;
     }
 
-    public void setNumberOfBalls(int numberOfBalls) {
-        this.numberOfBalls = numberOfBalls;
-    }
-
-    public String getGameModeName() {
-        return gameModeName;
-    }
-
-    public void setGameModeName(String gameModeName) {
-        this.gameModeName = gameModeName;
-    }
-
     public int getBricks() {
         return bricks;
-    }
-
-    public void setBricks(int bricks) {
-        this.bricks = bricks;
     }
 
     public int getStartingBricks() {
         return startingBricks;
     }
 
-    public void setStartingBricks(int startingBricks) {
-        this.startingBricks = startingBricks;
-    }
-
     public int getMaxGameTimeSecs() {
         return maxGameTimeSecs;
-    }
-
-    public void setMaxGameTimeSecs(int maxGameTimeSecs) {
-        this.maxGameTimeSecs = maxGameTimeSecs;
     }
 
     public boolean[] getSidesAllowed() {
         return sidesAllowed;
     }
 
-    public void setSidesAllowed(boolean[] sidesAllowed) {
-        this.sidesAllowed = sidesAllowed;
-    }
-
     public int getBallSpeed() {
         return ballSpeed;
-    }
-
-    public void setBallSpeed(int ballSpeed) {
-        this.ballSpeed = ballSpeed;
     }
 
     public int getPalettes() {
         return palettes;
     }
 
-    public void setPalettes(int palettes) {
-        this.palettes = palettes;
-    }
-
     public int getSpawnBrickCooldownSecs() {
         return spawnBrickCooldownSecs;
     }
 
-    public void setSpawnBrickCooldownSecs(int spawnBrickCooldownSecs) {
-        this.spawnBrickCooldownSecs = spawnBrickCooldownSecs;
-    }
-
     public int getNumberOfBricksEachSpawning() {
         return numberOfBricksEachSpawning;
-    }
-
-    public void setNumberOfBricksEachSpawning(int numberOfBricksEachSpawning) {
-        this.numberOfBricksEachSpawning = numberOfBricksEachSpawning;
     }
 }
