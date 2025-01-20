@@ -55,11 +55,11 @@ public class GameModeSelectionWindow {
                 // Create palettes based on the number specified in the selected game mode
                 if (selectedGameMode.getPalettes() == 1) {
                     // One palette at y = 500 (bottom-left corner placement)
-                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight, selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                    palettes.add(new PaletteDTO(ScreenHandler.colorBrick.getRGB(), GameWindow.screenX/2 - paletteWidth / 2, GameWindow.screenY-20 - paletteHeight, selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
                 } else if (selectedGameMode.getPalettes() == 2) {
                     // Two palettes, one at y = 500 and the other at y = 50 (bottom-left corner placement)
-                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, 20,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
-                    palettes.add(new PaletteDTO(ScreenHandler.paletteColor.getRGB(), GameWindow.screenX/2, GameWindow.screenY-20 - paletteHeight,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                    palettes.add(new PaletteDTO(ScreenHandler.colorBrick.getRGB(), GameWindow.screenX/2 - paletteWidth / 2, 20,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
+                    palettes.add(new PaletteDTO(ScreenHandler.colorBrick.getRGB(), GameWindow.screenX/2 - paletteWidth / 2, GameWindow.screenY-20 - paletteHeight,  selectedGameMode.getPaletteSpeed(), paletteWidth, paletteHeight));
                 }
 
                 List<BallDTO> balls = new ArrayList<>();

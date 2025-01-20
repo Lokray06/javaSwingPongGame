@@ -28,7 +28,7 @@ public class BrickSpawner {
         int screenWidth = GameWindow.screenX;
         int screenHeight = GameWindow.screenY;
         int marginX = GameWindow.marginX;
-        int marginY = GameWindow.marginY;
+        int marginY = GameWindow.marginY + 20;
 
         // Adjusting brick width and height for spacing
         brickWidth = (screenWidth - 2 * marginX - (columns - 1) * horizontalSpacing) / columns;
@@ -44,7 +44,7 @@ public class BrickSpawner {
                 int color = (int) (0x000000);
 
                 // Create the brick and add to the list
-                BrickDTO brick = new BrickDTO(color, posX, posY, brickWidth, brickHeight, 10, 10);
+                BrickDTO brick = new BrickDTO(posX, posY, brickWidth, brickHeight, 10, 10);
                 bricks.add(brick);
             }
         }
@@ -58,7 +58,7 @@ public class BrickSpawner {
             for (int i = 0; i < numBricks; i++) {
                 int x = Random.randomInGrid(brickWidth, brickHeight, bricks)[0];
                 int y = Random.randomInGrid(brickWidth, brickHeight, bricks)[1];
-                bricks.add(new BrickDTO(Color.BLACK.getRGB(), x, y, brickWidth, brickHeight, 1, 100));
+                bricks.add(new BrickDTO(x, y, brickWidth, brickHeight, 1, 100));
             }
             return;
         }
@@ -95,7 +95,7 @@ public class BrickSpawner {
 
             if (!overlaps && x >= 0 && y >= 0 && x + brickWidth <= 800 && y + brickHeight <= 600) {
                 // Add the new brick if it doesn't overlap and is within bounds
-                bricks.add(new BrickDTO(Color.BLACK.getRGB(), x, y, brickWidth, brickHeight, 1, 100));
+                bricks.add(new BrickDTO(x, y, brickWidth, brickHeight, 1, 100));
             } else {
                 // Retry this brick if placement failed
                 i--;

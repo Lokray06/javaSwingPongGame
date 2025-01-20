@@ -21,7 +21,7 @@ public class BallDTO {
         this.posY = posY;
         this.moveSpeed = moveSpeed;
         this.velX = moveSpeed * Random.direction();
-        this.velY = moveSpeed * Random.direction();
+        this.velY = moveSpeed;
     }
 
     public List<BrickDTO> checkBrickCollision(List<BrickDTO> bricks) {

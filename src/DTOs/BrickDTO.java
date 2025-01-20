@@ -1,9 +1,12 @@
 package DTOs;
 
 import utils.BrickSpawner;
+import utils.ScreenHandler;
+
+import java.awt.*;
 
 public class BrickDTO {
-    public int color;
+    public Color color;
     private int posX, posY;
     private int width, height;
     private int health;
@@ -11,8 +14,8 @@ public class BrickDTO {
 
 
     // Constructor
-    public BrickDTO(int color, int posX, int posY, int width, int height, int health, int score) {
-        this.color = color;
+    public BrickDTO(int posX, int posY, int width, int height, int health, int score) {
+        this.color = ScreenHandler.colorBrick;
         this.posX = posX;
         this.posY = posY;
         this.width = width;

@@ -175,6 +175,7 @@ public class Controller {
             ball.posY = GameWindow.screenY / 2;
             ball.velX = 0; // Stop the ball temporarily
             ball.velY = 0;
+            System.out.println(ball.posX + ", " + ball.posY);
 
             // Pause the ball for 2 seconds before continuing
             new Timer().schedule(new TimerTask() {
@@ -182,7 +183,7 @@ public class Controller {
                 public void run() {
                     // After the pause, set the ball's speed
                     ball.velX = selectedGameMode.getBallSpeed() * Random.direction();
-                    ball.velY = selectedGameMode.getBallSpeed() * Random.direction();
+                    ball.velY = selectedGameMode.getBallSpeed();
                 }
             }, 2000); // Wait for 2 seconds before continuing ball movement
         }
@@ -191,6 +192,8 @@ public class Controller {
     // End the game when lives reach 0
     private void endGame() {
         // You can add logic here for ending the game, such as displaying a game over screen
+        //Prevent any more calls to GameWindow.tick();
+        
         gameOver = true;
         if (spawnTimer != null) {
             spawnTimer.cancel(); // Stop the brick spawn timer

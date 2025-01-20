@@ -16,7 +16,6 @@ public class Random {
     public static int direction() {
         // Return either -1 or 1 randomly
         int newDirection = Math.random() < 0.5 ? -1 : 1;
-        System.out.println(newDirection);
         return newDirection;
     }
 
