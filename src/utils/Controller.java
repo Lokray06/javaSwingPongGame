@@ -16,7 +16,7 @@ public class Controller {
     private List<BallDTO> balls;
     public static List<BrickDTO> bricks;
     private GameModeDTO selectedGameMode;
-    BrickSpawner brickSpawner = new BrickSpawner(50, 20, 2, 2);
+    BrickSpawner brickSpawner = new BrickSpawner(60, 30, 2, 2);
 
     public static int hInput = 0;
     public static int score = 0;

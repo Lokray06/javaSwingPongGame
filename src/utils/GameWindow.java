@@ -35,7 +35,7 @@ public class GameWindow {
         controller = new Controller(palettes, balls);
         
         // Set the window size to fit both the game and the UI overlay (add 40px for the UI overlay)
-        frame.setSize(screenX + 16, screenY + 79);  // Correct the window height to accommodate the overlay
+        frame.setSize(screenX, screenY + 77);  // Correct the window height to accommodate the overlay
         frame.setLocationRelativeTo(null);  // Center the window on the screen
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // Prevent the default closing behavior
         

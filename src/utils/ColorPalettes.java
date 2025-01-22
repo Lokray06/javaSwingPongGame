@@ -1,10 +1,8 @@
 package utils;
 
 import DTOs.ColorPaletteDTO;
-import DTOs.GameModeDTO;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class ColorPalettes
