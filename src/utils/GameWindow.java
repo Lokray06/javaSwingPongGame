@@ -129,10 +129,23 @@ public class GameWindow {
             @Override
             public void keyPressed(KeyEvent e) {
                 // Check if left or right arrow keys are pressed
-                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                    Controller.hInput = -1;
-                } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    Controller.hInput = 1;
+                if(!controller.autoplay)
+                {
+                    if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                        Controller.hInput = -1;
+                    } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        Controller.hInput = 1;
+                    }
+                    if(e.getKeyCode() == KeyEvent.VK_F1) {
+                        controller.autoplay = true;
+                    }
+                }
+                else
+                {
+                    if(e.getKeyCode() == KeyEvent.VK_F1)
+                    {
+                        controller.autoplay = false;
+                    }
                 }
             }
             

@@ -18,6 +18,8 @@ public class Controller {
     private GameModeDTO selectedGameMode;
     BrickSpawner brickSpawner = new BrickSpawner(60, 30, 2, 2);
 
+    public static boolean autoplay = false;
+
     public static int hInput = 0;
     public static int score = 0;
     private boolean requestSpawn = true;
@@ -59,6 +61,14 @@ public class Controller {
     }
 
     public void update() {
+
+        if(autoplay)
+        {
+            for (PaletteDTO palette : palettes) {
+                palette.posX = balls.getFirst().posX;
+            }
+        }
+
         // Reset passedSides for each update cycle
         for (int i = 0; i < passedSides.length; i++) {
             passedSides[i] = false; // Reset all sides
