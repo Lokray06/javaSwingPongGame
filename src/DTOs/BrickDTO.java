@@ -9,19 +9,14 @@ public class BrickDTO {
     public Color color;
     private int posX, posY;
     private int width, height;
-    private int health;
-    private int score;
-
 
     // Constructor
-    public BrickDTO(int posX, int posY, int width, int height, int health, int score) {
+    public BrickDTO(int posX, int posY, int width, int height, int a, int b) {
         this.color = ScreenHandler.colorBrick;
         this.posX = posX;
         this.posY = posY;
         this.width = width;
         this.height = height;
-        this.health = health;
-        this.score = score;
         BrickSpawner.totalNumberOfBricksSpawned++;
     }
 

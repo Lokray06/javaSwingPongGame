@@ -8,9 +8,7 @@ public class Main {
         // Initialize levels
         Levels.init();
         ColorPalettes.init();
-
-
-
+        
         // Create and show the game mode selection window
         SwingUtilities.invokeLater(() -> new GameModeSelectionWindow());
     }
